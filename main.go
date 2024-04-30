@@ -63,7 +63,7 @@ func View(w http.ResponseWriter, r *http.Request) {
 	apiUrl := os.Getenv("CORE_ENDPOINT")
 	clientId := os.Getenv("CLIENT_KEY")
 	clientSecret := os.Getenv("CLIENT_SECRET")
-	tokenUrl := os.Getenv("TOKEY_KEY")
+	tokenUrl := os.Getenv("TOKEN_KEY")
 	// clientId, clientSecret and tokenUrl represent variables to which respective environment variables were read
 	var clientCredsConfig = clientcredentials.Config{
 		ClientID:     clientId,
