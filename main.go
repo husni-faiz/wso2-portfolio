@@ -43,7 +43,9 @@ func main() {
 }
 
 func View(w http.ResponseWriter, r *http.Request) {
-	response, err := http.Get("http://localhost:3333/visit")
+	host := os.Getenv("CORE_ENDPOINT")
+	// port := os.Getenv("CORE_PORT")
+	response, err := http.Get(host)
 	if err != nil {
         fmt.Print(err.Error())
         os.Exit(1)
