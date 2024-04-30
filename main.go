@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,6 +13,7 @@ import (
 	"os/signal"
 
 	_ "github.com/lib/pq"
+	"golang.org/x/oauth2/clientcredentials"
 )
 
 var host string
@@ -21,19 +23,19 @@ func main() {
 	// http.Handle("/", http.FileServer(http.Dir("./static")))
 	http.HandleFunc("/", View)
 
-	configFile, err := os.Open("config.json")
-	// if we os.Open returns an error then handle it
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println("Successfully Opened config.json")
-	// defer the closing of our jsonFile so that we can parse it later on
-	defer configFile.Close()
-	byteValue, _ := ioutil.ReadAll(configFile)
-	config := make(map[string]string)
-	json.Unmarshal(byteValue, &config)
-	host = config["apiUrl"]
-	// fmt.Println(host)
+	// configFile, err := os.Open("config.json")
+	// // if we os.Open returns an error then handle it
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// fmt.Println("Successfully Opened config.json")
+	// // defer the closing of our jsonFile so that we can parse it later on
+	// defer configFile.Close()
+	// byteValue, _ := ioutil.ReadAll(configFile)
+	// config := make(map[string]string)
+	// json.Unmarshal(byteValue, &config)
+	// host = config["apiUrl"]
+	// // fmt.Println(host)
 
 	server := &http.Server{
         Addr: ":8080",
@@ -58,8 +60,19 @@ func main() {
 }
 
 func View(w http.ResponseWriter, r *http.Request) {
-	// port := os.Getenv("CORE_PORT")
-	response, err := http.Get(host)
+	apiUrl := os.Getenv("CORE_ENDPOINT")
+	clientId := os.Getenv("CLIENT_KEY")
+	clientSecret := os.Getenv("CLIENT_SECRET")
+	tokenUrl := os.Getenv("TOKEY_KEY")
+	// clientId, clientSecret and tokenUrl represent variables to which respective environment variables were read
+	var clientCredsConfig = clientcredentials.Config{
+		ClientID:     clientId,
+		ClientSecret: clientSecret,
+		TokenURL:     tokenUrl,
+	}
+	client := clientCredsConfig.Client(context.Background())
+	response, err := client.Get(apiUrl)
+	// response, err := http.Get(apiUrl)
 	if err != nil {
         fmt.Print(err.Error())
         os.Exit(1)

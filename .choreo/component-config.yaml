@@ -1,0 +1,13 @@
+outbound:
+    serviceReferences:
+    - name: choreo:///embeddedintelligence/iwashere/wiwxqn/a4f68/v1/PUBLIC
+      connectionConfig: 01ef0730-bba8-1c80-969a-4ee3d0e2099b
+      env:
+      - from: ServiceURL
+        to: CORE_ENDPOINT 
+      - from: ConsumerKey
+        to: CLIENT_KEY
+      - from: ConsumerSecret
+        to: CLIENT_SECRET
+      - from: TokenURL
+        to: TOKEN_URL
