@@ -71,7 +71,7 @@ func View(w http.ResponseWriter, r *http.Request) {
 		TokenURL:     tokenUrl,
 	}
 	client := clientCredsConfig.Client(context.Background())
-	response, err := client.Get(apiUrl)
+	response, err := client.Get(apiUrl+"/visit")
 	// response, err := http.Get(apiUrl)
 	if err != nil {
         fmt.Print(err.Error())
