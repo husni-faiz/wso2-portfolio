@@ -14,11 +14,26 @@ import (
 	_ "github.com/lib/pq"
 )
 
+var host string
 
 func main() {
 	var err error
 	// http.Handle("/", http.FileServer(http.Dir("./static")))
 	http.HandleFunc("/", View)
+
+	configFile, err := os.Open("config.json")
+	// if we os.Open returns an error then handle it
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("Successfully Opened config.json")
+	// defer the closing of our jsonFile so that we can parse it later on
+	defer configFile.Close()
+	byteValue, _ := ioutil.ReadAll(configFile)
+	config := make(map[string]string)
+	json.Unmarshal(byteValue, &config)
+	host = config["apiUrl"]
+	// fmt.Println(host)
 
 	server := &http.Server{
         Addr: ":8080",
@@ -43,7 +58,6 @@ func main() {
 }
 
 func View(w http.ResponseWriter, r *http.Request) {
-	host := os.Getenv("CORE_ENDPOINT")
 	// port := os.Getenv("CORE_PORT")
 	response, err := http.Get(host)
 	if err != nil {
